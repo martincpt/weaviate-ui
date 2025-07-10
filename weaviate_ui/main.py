@@ -25,7 +25,15 @@ WEAVIATE_SECURE = bool(os.getenv("WEAVIATE_SECURE"))
 WEAVIATE_GRPC_HOST = os.getenv("WEAVIATE_GRPC_HOST")
 WEAVIATE_GRPC_PORT = int(os.getenv("WEAVIATE_GRPC_PORT"))
 WEAVIATE_GRPC_SECURE = bool(os.getenv("WEAVIATE_GRPC_SECURE"))
-WEAVIATE_AUTH_CREDENTIALS = os.getenv("WEAVIATE_AUTH_CREDENTIALS", None)
+WEAVIATE_API_KEY = os.getenv("WEAVIATE_API_KEY", None)
+WEAVIATE_BEARER_TOKEN = os.getenv("WEAVIATE_BEARER_TOKEN", None)
+
+auth_credentials = None
+
+if WEAVIATE_API_KEY:
+    auth_credentials = weaviate.auth.Auth.api_key(WEAVIATE_API_KEY)
+elif WEAVIATE_BEARER_TOKEN:
+    auth_credentials = weaviate.auth.Auth.bearer_token(WEAVIATE_BEARER_TOKEN)
 
 client = weaviate.connect_to_custom(
     http_host=WEAVIATE_HOST,
@@ -34,7 +42,7 @@ client = weaviate.connect_to_custom(
     grpc_host=WEAVIATE_GRPC_HOST,
     grpc_port=WEAVIATE_GRPC_PORT,
     grpc_secure=WEAVIATE_GRPC_SECURE,
-    auth_credentials=WEAVIATE_AUTH_CREDENTIALS,
+    auth_credentials=auth_credentials,
 )
 
 
@@ -52,7 +60,7 @@ def class0(
     certainty: float = 0.65,
     properties: list[str] | None = None,
 ):
-    logger.info(keyword)
+    logger.info(f"{keyword=}, {certainty=}")
 
     collection = client.collections.get(class_name)
     paginate = {"limit": limit, "offset": offset}

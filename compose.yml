@@ -13,7 +13,8 @@ services:
       - WEAVIATE_GRPC_HOST=host.docker.internal
       - WEAVIATE_GRPC_PORT=50051
       - WEAVIATE_GRPC_SECURE=
-      # - WEAVIATE_AUTH_CREDENTIALS=
+      # - WEAVIATE_API_KEY=
+      # - WEAVIATE_BEARER_TOKEN=
     volumes:
       - ./weaviate_ui:/app/weaviate_ui
       # - ./frontend/dist:/app/static # Uncomment this line if you want to use a local frontend build
